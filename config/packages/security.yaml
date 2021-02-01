@@ -1,15 +1,30 @@
 security:
+    encoders:
+        App\Entity\User:
+            algorithm: auto
+
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             anonymous: true
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
+
+            logout:
+                path: app_logout
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -20,5 +35,46 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/user, roles: ROLE_ADMIN }
+
+        # school_year_index
+        - { path: ^/school-year/?$, roles: [ROLE_ADMIN, ROLE_USER, ROLE_TEACHER]}
+        # school_year_new
+        - { path: ^/school-year/new$, roles: ROLE_ADMIN}
+        # school_year_show
+        - { path: '^/school-year/[0-9]+$', roles: [ROLE_ADMIN, ROLE_TEACHER, ROLE_STUDENT], methods: GET}
+        # school_year_edit
+        - { path: '^/school-year/[0-9]+/edit$', roles: [ROLE_ADMIN, ROLE_TEACHER]}
+        # school_year_delete
+        - { path: '^/school-year/[0-9]+$', roles: ROLE_ADMIN, methods: GET}
+
+        # # Admin
+        # - { path: ^/school-year, roles: ROLE_ADMIN }
+        # # Teacher
+        # - { path: '^/school-year/?$', roles: ROLE_TEACHER }
+        # - { path: '^/school-year/[0-9]+', roles: ROLE_TEACHER, methods: GET }
+        # - { path: '^/school-year/[0-9]+/edit', roles: ROLE_TEACHER }
+        # # [0-9]+ tous les caractères entre 0 et 9 et plus
+        
+        # # Student
+        # - { path: '^/school-year/[0-9]+', roles: ROLE_STUDENT, methods: GET }
+
+        # # Client
+        # # rien
+
+        # # Projets
+        # - { path: ^/project, roles: ROLE_ADMIN }
+        # # Teacher
+        # - { path: ^/project, roles: ROLE_TEACHER }
+        
+        # # Student
+        # - { path: '^/project/?$', roles: ROLE_STUDENT }
+        # - { path: '^/project/[0-9]+/edit', roles: ROLE_STUDENT }
+        # - { path: '^/project/[0-9]+', roles: ROLE_STUDENT }
+
+        # # Client
+        # - { path: '^/project/?$', roles: ROLE_CLIENT }
+
+        # - { path: '^/project/[0-9]+', roles: [ROLE_USER] }

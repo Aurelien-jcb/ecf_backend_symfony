@@ -1,2 +1,4 @@
 twig:
+    # Indique l'import de bootstrap
+    form_themes: ['bootstrap_4_layout.html.twig']
     default_path: '%kernel.project_dir%/templates'
