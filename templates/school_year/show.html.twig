@@ -25,6 +25,7 @@
             </tr>
         </tbody>
     </table>
+
     {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_TEACHER') %}
         <a href="{{ path('school_year_index') }}">back to list</a>
         <a href="{{ path('school_year_edit', {'id': school_year.id}) }}">edit</a>

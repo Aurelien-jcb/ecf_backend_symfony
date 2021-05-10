@@ -23,10 +23,8 @@
                 <td>{{ school_year.dateStart ? school_year.dateStart|date('Y-m-d') : '' }}</td>
                 <td>{{ school_year.dateEnd ? school_year.dateEnd|date('Y-m-d') : '' }}</td>
                 <td>
-                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_TEACHER') %}
                     <a href="{{ path('school_year_show', {'id': school_year.id}) }}">show</a>
                     <a href="{{ path('school_year_edit', {'id': school_year.id}) }}">edit</a>
-                {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -36,7 +34,6 @@
         {% endfor %}
         </tbody>
     </table>
-    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_TEACHER') %}      
-        <a href="{{ path('school_year_new') }}">Create new</a>
-    {% endif %}
+
+    <a href="{{ path('school_year_new') }}">Create new</a>
 {% endblock %}

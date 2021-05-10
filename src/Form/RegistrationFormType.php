@@ -2,15 +2,15 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Entity\Project;
 use App\Entity\SchoolYear;
+use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -30,7 +30,6 @@ class RegistrationFormType extends AbstractType
                     'client' => 'ROLE_CLIENT',
                 ],
                 'multiple' => true,
-                // Menu select en checkbox ?
                 'expanded' => true,
             ])
             ->add('firstname')
@@ -42,15 +41,15 @@ class RegistrationFormType extends AbstractType
                     return "{$project->getName()} ({$project->getId()})";
                 },
                 'multiple' => true,
-                // Menu select en checkbox ?
                 'expanded' => true,
             ])
             ->add('schoolYear', EntityType::class, [
                 'class' => SchoolYear::class,
                 'choice_label' => function($schoolYear) {
-                    return "{{$schoolYear->getName()} ({$schoolYear->getId()})";
+                    return "{$schoolYear->getName()} ({$schoolYear->getId()})";
                 },
                 'multiple' => false,
+                'expanded' => true,
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,

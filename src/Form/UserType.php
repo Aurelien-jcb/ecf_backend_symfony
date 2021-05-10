@@ -28,10 +28,8 @@ class UserType extends AbstractType
                     'client' => 'ROLE_CLIENT',
                 ],
                 'multiple' => true,
-                // Menu select en checkbox ?
                 'expanded' => true,
             ])
-            // Masque le mot de passe et ajouter champs de confirmation de mot de passe
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
@@ -49,13 +47,12 @@ class UserType extends AbstractType
                     return "{$project->getName()} ({$project->getId()})";
                 },
                 'multiple' => true,
-                // Menu select en checkbox ?
                 'expanded' => true,
             ])
             ->add('schoolYear', EntityType::class, [
                 'class' => SchoolYear::class,
                 'choice_label' => function($schoolYear) {
-                    return "{{$schoolYear->getName()} ({$schoolYear->getId()})";
+                    return "{$schoolYear->getName()} ({$schoolYear->getId()})";
                 },
                 'multiple' => false,
             ])
@@ -66,10 +63,9 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            // Désactive la validation HTML5
             'attr' => [
                 'novalidate' => 'novalidate',
-            ]
+            ] 
         ]);
     }
 }

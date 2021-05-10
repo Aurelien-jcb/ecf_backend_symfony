@@ -6,7 +6,6 @@ use App\Entity\Project;
 use App\Form\ProjectType;
 use App\Form\ProjectForStudentType;
 use App\Repository\ProjectRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,25 +22,40 @@ class ProjectController extends AbstractController
      */
     public function index(ProjectRepository $projectRepository): Response
     {
-        if (!(
-            $this->isGranted('ROLE_ADMIN')
-            || $this->isGranted('ROLE_TEACHER')
-            || $this->isGranted('ROLE_STUDENT')
-            || $this->isGranted('ROLE_CLIENT')
-        )) {
+        // filtrage des utilisateurs non autorisés
+        // une négation de « ou »
+        // if (!(
+        //         $this->isGranted('ROLE_ADMIN')
+        //         || $this->isGranted('ROLE_TEACHER')
+        //         || $this->isGranted('ROLE_STUDENT')
+        //         || $this->isGranted('ROLE_CLIENT')
+        // )){
+        //     throw new AccessDeniedException();
+        // }
+
+        // filtrage des utilisateurs non autorisés
+        // des négations de « et »
+        if (!$this->isGranted('ROLE_ADMIN')
+            && !$this->isGranted('ROLE_TEACHER')
+            && !$this->isGranted('ROLE_STUDENT')
+            && !$this->isGranted('ROLE_CLIENT')
+        ) {
             throw new AccessDeniedException();
         }
 
+        // affichage des projets possédés par l'utilisateur
         if ($this->isGranted('ROLE_STUDENT')
-        || $this->isGranted('ROLE_CLIENT')
+            || $this->isGranted('ROLE_CLIENT')
         ) {
+            // projets de l'utilisateur
             $projects = $this->getUser()->getProjects();
         } else {
+            // tous les projets
             $projects = $projectRepository->findAll();
         }
 
         return $this->render('project/index.html.twig', [
-            'projects' => $projectRepository->findAll(),
+            'projects' => $projects,
         ]);
     }
 
@@ -50,10 +64,20 @@ class ProjectController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        if (!(
-            $this->isGranted('ROLE_ADMIN')
-            || $this->isGranted('ROLE_TEACHER')
-        )) {
+        // filtrage des utilisateurs non autorisés
+        // une négation de « ou »
+        // if (!(
+        //         $this->isGranted('ROLE_ADMIN')
+        //         || $this->isGranted('ROLE_TEACHER')
+        // )){
+        //     throw new AccessDeniedException();
+        // }
+
+        // filtrage des utilisateurs non autorisés
+        // des négations de « et »
+        if (!$this->isGranted('ROLE_ADMIN')
+            && !$this->isGranted('ROLE_TEACHER')
+        ) {
             throw new AccessDeniedException();
         }
 
@@ -80,14 +104,28 @@ class ProjectController extends AbstractController
      */
     public function show(Project $project): Response
     {
-        if (!(
-            $this->isGranted('ROLE_ADMIN')
-            || $this->isGranted('ROLE_TEACHER')
-            || $this->isGranted('ROLE_STUDENT')
-            || $this->isGranted('ROLE_CLIENT')
-        )) {
+        // filtrage des utilisateurs non autorisés
+        // une négation de « ou »
+        // if (!(
+        //         $this->isGranted('ROLE_ADMIN')
+        //         || $this->isGranted('ROLE_TEACHER')
+        //         || $this->isGranted('ROLE_STUDENT')
+        //         || $this->isGranted('ROLE_CLIENT')
+        // )){
+        //     throw new AccessDeniedException();
+        // }
+
+        // filtrage des utilisateurs non autorisés
+        // des négations de « et »
+        if (!$this->isGranted('ROLE_ADMIN')
+            && !$this->isGranted('ROLE_TEACHER')
+            && !$this->isGranted('ROLE_STUDENT')
+            && !$this->isGranted('ROLE_CLIENT')
+        ) {
             throw new AccessDeniedException();
         }
+
+        // affichage des projets possédés par l'utilisateur
         if ($this->isGranted('ROLE_STUDENT')
             || $this->isGranted('ROLE_CLIENT')
         ) {
@@ -97,6 +135,7 @@ class ProjectController extends AbstractController
                 throw new AccessDeniedException();
             }
         }
+
         return $this->render('project/show.html.twig', [
             'project' => $project,
         ]);
@@ -107,11 +146,20 @@ class ProjectController extends AbstractController
      */
     public function edit(Request $request, Project $project): Response
     {
+        // filtrage des utilisateurs non autorisés
+        // une négation de « ou »
+        // if (!(
+        //         $this->isGranted('ROLE_ADMIN')
+        //         || $this->isGranted('ROLE_TEACHER')
+        // )){
+        //     throw new AccessDeniedException();
+        // }
 
-        if (!(
-            $this->isGranted('ROLE_ADMIN')
-            || $this->isGranted('ROLE_TEACHER')
-        )) {
+        // filtrage des utilisateurs non autorisés
+        // des négations de « et »
+        if (!$this->isGranted('ROLE_ADMIN')
+            && !$this->isGranted('ROLE_TEACHER')
+        ) {
             throw new AccessDeniedException();
         }
 
@@ -135,14 +183,26 @@ class ProjectController extends AbstractController
      */
     public function editForStudent(Request $request, Project $project): Response
     {
-        if (!(
-            $this->isGranted('ROLE_ADMIN')
-            || $this->isGranted('ROLE_TEACHER')
-            || $this->isGranted('ROLE_STUDENT')
-        )) {
+        // filtrage des utilisateurs non autorisés
+        // une négation de « ou »
+        // if (!(
+        //         $this->isGranted('ROLE_ADMIN')
+        //         || $this->isGranted('ROLE_TEACHER')
+        //         || $this->isGranted('ROLE_STUDENT')
+        // )){
+        //     throw new AccessDeniedException();
+        // }
+
+        // filtrage des utilisateurs non autorisés
+        // des négations de « et »
+        if (!$this->isGranted('ROLE_ADMIN')
+            && !$this->isGranted('ROLE_TEACHER')
+            && !$this->isGranted('ROLE_STUDENT')
+        ) {
             throw new AccessDeniedException();
         }
 
+        // affichage des projets possédés par l'utilisateur
         if ($this->isGranted('ROLE_STUDENT')) {
             $projects = $this->getUser()->getProjects();
 
@@ -166,17 +226,25 @@ class ProjectController extends AbstractController
         ]);
     }
 
-    
-
     /**
      * @Route("/{id}", name="project_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Project $project): Response
     {
-        if (!(
-            $this->isGranted('ROLE_ADMIN')
-            || $this->isGranted('ROLE_TEACHER')
-        )) {
+        // filtrage des utilisateurs non autorisés
+        // une négation de « ou »
+        // if (!(
+        //         $this->isGranted('ROLE_ADMIN')
+        //         || $this->isGranted('ROLE_TEACHER')
+        // )){
+        //     throw new AccessDeniedException();
+        // }
+
+        // filtrage des utilisateurs non autorisés
+        // des négations de « et »
+        if (!$this->isGranted('ROLE_ADMIN')
+            && !$this->isGranted('ROLE_TEACHER')
+        ) {
             throw new AccessDeniedException();
         }
 

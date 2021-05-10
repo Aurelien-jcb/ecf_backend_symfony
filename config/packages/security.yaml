@@ -24,7 +24,7 @@ security:
                 path: app_logout
             guard:
                 authenticators:
-                    - App\Security\LoginFormAuthenticator
+                    - App\Security\AppLoginAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

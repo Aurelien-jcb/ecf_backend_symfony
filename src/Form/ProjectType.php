@@ -19,12 +19,15 @@ class ProjectType extends AbstractType
             ->add('users', EntityType::class, [
                 // looks for choices from this entity
                 'class' => User::class,
-                // Permet de choisir ce qui sera affiché dans le menu déroulant.
+
+                // uses the User.username property as the visible option string
                 'choice_label' => function($user) {
                     return "{$user->getFirstname()} {$user->getLastname()} ({$user->getId()})";
                 },
-                // Précise que le champs est à choix multiples
+
+                // used to render a select box, check boxes or radios
                 'multiple' => true,
+                'expanded' => true,
             ])
         ;
     }
@@ -33,7 +36,6 @@ class ProjectType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Project::class,
-            // Désactive la validation HTML5
             'attr' => [
                 'novalidate' => 'novalidate',
             ]

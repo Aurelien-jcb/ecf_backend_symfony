@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/school-year")
@@ -30,25 +29,7 @@ class SchoolYearController extends AbstractController
      * @Route("/new", name="school_year_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
-    {   
-
-        // if (!(
-        //     $this->isGranted('ROLE_ADMIN')
-        //     || $this->isGranted('ROLE_TEACHER')
-        //     || $this->isGranted('ROLE_STUDENT')
-        //     || $this->isGranted('ROLE_CLIENT')
-        // )) {
-        //     throw new AccessDeniedException();
-        // }
-
-        // if ($this->isGranted('ROLE_STUDENT')
-        // || $this->isGranted('ROLE_CLIENT')
-        // ) {
-        //     $projects = $this->getUser()->getProjects();
-        // } else {
-        //     $projects = $projectRepository->findAll();
-        // }
-
+    {
         $schoolYear = new SchoolYear();
         $form = $this->createForm(SchoolYearType::class, $schoolYear);
         $form->handleRequest($request);
@@ -70,9 +51,9 @@ class SchoolYearController extends AbstractController
     /**
      * @Route("/{id}", name="school_year_show", methods={"GET"})
      */
-    // 
     public function show(SchoolYear $schoolYear): Response
     {
+        // générer une exception si un student demande une school year qui n'est pas la sienne
         if (
             !$this->isGranted('ROLE_ADMIN')
             && !$this->isGranted('ROLE_TEACHER')
@@ -81,16 +62,13 @@ class SchoolYearController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        if ($this->isGranted('ROLE_ADMIN')
-        || $this->isGranted('ROLE_TEACHER')) {
-            // on vérifie si l'id du projet est bien dans la liste des projets de l'utilisateur
-            $schoolYears = $this->getUSer()->getId();
-            //on va utiliser arraycollection
-            if (!$schoolYears->contains($schoolYear)) {
-                throw new AccessDeniedException();
-            }
-
-        }
+        // if ($this->isGranted('ROLE_ADMIN')
+        // || $this->isGranted('ROLE_TEACHER')) {
+        //     $schoolYears = $this->getUser()->getSchoolYear();
+        //     if (!$schoolYears->contains($schoolYear)) {
+        //         throw new AccessDeniedException();
+        //     }
+        // }
 
         return $this->render('school_year/show.html.twig', [
             'school_year' => $schoolYear,
@@ -122,6 +100,24 @@ class SchoolYearController extends AbstractController
      */
     public function delete(Request $request, SchoolYear $schoolYear): Response
     {
+        if (
+            !$this->isGranted('ROLE_ADMIN')
+            && !$this->isGranted('ROLE_TEACHER')
+            && !$this->isGranted('ROLE_STUDENT')
+        ) {
+            throw new AccessDeniedException();
+        }
+
+        if ($this->isGranted('ROLE_ADMIN')
+        || $this->isGranted('ROLE_TEACHER')) {
+            // on vérifie si l'id du projet est bien dans la liste des projets de l'utilisateur
+            $schoolYears = $this->getUSer()->getSchoolYear();
+            //on va utiliser arraycollection
+            if (!$schoolYears->contains($schoolYear)) {
+                throw new AccessDeniedException();
+            }
+
+        }
         if ($this->isCsrfTokenValid('delete'.$schoolYear->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($schoolYear);

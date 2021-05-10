@@ -20,7 +20,7 @@ use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticato
 use Symfony\Component\Security\Guard\PasswordAuthenticatedInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
+class AppLoginAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
 {
     use TargetPathTrait;
 
@@ -91,52 +91,39 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
-    {   
-        // Récupérer info sur le user
-        // $token->getUser();
+    {
         $user = $token->getUser();
 
         $roleNames = $token->getRoleNames();
 
         if (in_array('ROLE_ADMIN', $roleNames)
-        || in_array('ROLE_TEACHER', $roleNames)) {
-        // redirection vers la page des promos
-        return new RedirectResponse($this->urlGenerator->generate('school_year_index'));
+            || in_array('ROLE_TEACHER', $roleNames)) {
+            // redirection vers la page des promos
+            return new RedirectResponse($this->urlGenerator->generate('school_year_index'));
         } elseif (in_array('ROLE_STUDENT', $roleNames)) {
-        // redirection vers la page de sa promo
-        return new RedirectResponse($this->urlGenerator->generate('school_year_show', [
-            'id' => $user->getSchoolYear()->getId(),
-        ]));
+            // redirection vers la page de sa promo
+            return new RedirectResponse($this->urlGenerator->generate('school_year_show', [
+                'id' => $user->getSchoolYear()->getId(),
+            ]));
         } elseif (in_array('ROLE_CLIENT', $roleNames)) {
-        // redirection vers la page de ses projets
-        return new RedirectResponse($this->urlGenerator->generate('project_index'));
+            // redirection vers la page de ses projets
+            return new RedirectResponse($this->urlGenerator->generate('project_index'));
         }
 
-
-        // VERSION SWITCH
         // switch (true) {
-        //     case inArray('ROLE_ADMIN', $roleNames):
-        //     case inArray('ROLE_TEACHER', $roleNames):
-        //         // REDIRECTION VERS PAGE DES PROMOS
+        //     case in_array('ROLE_ADMIN', $roleNames):
+        //     case in_array('ROLE_TEACHER', $roleNames):
+        //         // redirection vers la page des promos
         //         return new RedirectResponse($this->urlGenerator->generate('school_year_index'));
-        //     case inArray('ROLE_STUDENT', $roleNames):
-        //         /// REDIRECTION VERS PAGE DE SA PROMO
+        //     case in_array('ROLE_STUDENT', $roleNames):
+        //         // redirection vers la page de sa promo
         //         return new RedirectResponse($this->urlGenerator->generate('school_year_show', [
         //             'id' => $user->getSchoolYear()->getId(),
         //         ]));
-        //     case inArray('ROLE_CLIENT', $roleNames):
-        //         // REDIRECTION VERS PAGE DES PROJETS
+        //     case in_array('ROLE_CLIENT', $roleNames):
+        //         // redirection vers la page de ses projets
         //         return new RedirectResponse($this->urlGenerator->generate('project_index'));
-        //     }
-
-
-        // Redirige après connexion
-        // if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
-        //     return new RedirectResponse($targetPath);
         // }
-
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl()

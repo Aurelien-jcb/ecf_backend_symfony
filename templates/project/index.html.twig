@@ -36,6 +36,7 @@
         {% endfor %}
         </tbody>
     </table>
+
     {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_TEACHER') %}
         <a href="{{ path('project_new') }}">Create new</a>
     {% endif %}
