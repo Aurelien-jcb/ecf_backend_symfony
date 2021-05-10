@@ -22,20 +22,20 @@ Pour lancer le projet il faudra :
 
 - Création de la structure de la base de donnée
     - php bin/console make:entity
-        $ Nom de la table (ex: Projet)
-        $ Ajouter un champs (ex: name)
-        $ type de champs (default String)
-        $ Longueur de champs (max pour un string: 190)
-        $ Optionnel (ex: no)
+        - Nom de la table (ex: Projet)
+        - Ajouter un champs (ex: name)
+        - type de champs (default String)
+        - Longueur de champs (max pour un string: 190)
+        - Optionnel (ex: no)
 
 - Création des realtions entre les tables
     $ php bin/console make:entity [nom] (ex: User)
-        $ propriété ? (ex: projects)
-        $ Type ? (ex: relation, ManyToMany,ManyToOne etc)
-        $ Relation avec quelle entité ? (ex: Project)
-        $ Type de relation si pas indiqué précédement (ex: ManyToMany,ManyToOne etc)
-        $ Bidirectionnalité ? (si marche dans les 2 sens oui)
-        $ Nom du nouveau champs (ex: users)
+        - propriété ? (ex: projects)
+        - Type ? (ex: relation, ManyToMany,ManyToOne etc)
+        - Relation avec quelle entité ? (ex: Project)
+        - Type de relation si pas indiqué précédement (ex: ManyToMany,ManyToOne etc)
+        - Bidirectionnalité ? (si marche dans les 2 sens oui)
+        - Nom du nouveau champs (ex: users)
 
 - Structure de la base de donnée
     - user
